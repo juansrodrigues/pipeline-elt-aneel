@@ -1,0 +1,16 @@
+# Airflow
+airflow/logs/
+airflow/plugins/
+
+# Snowflake / dbt
+dbt/target/
+dbt/dbt_packages/
+.dbt/profiles.yml
+
+# Env vars — NUNCA commitar
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
