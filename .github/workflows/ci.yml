@@ -1,0 +1,54 @@
+name: CI — dbt compile & test
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  dbt-ci:
+    name: dbt compile + test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Instala Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Instala dependências
+        run: |
+          pip install dbt-snowflake==1.8.0
+
+      - name: Cria o profiles.yml
+        run: |
+          mkdir -p ~/.dbt
+          cat > ~/.dbt/profiles.yml << PROFILE
+          aneel_pipeline:
+            target: ci
+            outputs:
+              ci:
+                type: snowflake
+                account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+                user: ${{ secrets.SNOWFLAKE_USER }}
+                password: ${{ secrets.SNOWFLAKE_PASSWORD }}
+                role: SYSADMIN
+                database: ANEEL_DB
+                warehouse: COMPUTE_WH
+                schema: STAGING
+                threads: 4
+                client_session_keep_alive: false
+          PROFILE
+
+      - name: dbt compile
+        working-directory: dbt
+        run: dbt compile
+
+      - name: dbt test
+        working-directory: dbt
+        run: dbt test
