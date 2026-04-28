@@ -1,0 +1,21 @@
+version: 2
+
+sources:
+  - name: aneel_raw
+    database: ANEEL_DB
+    schema: RAW
+    description: "Dados brutos da ANEEL carregados do S3 via COPY INTO"
+    tables:
+      - name: samp_raw
+        description: "SAMP — Sistema de Acompanhamento de Mercado."
+        columns:
+          - name: sig_agente_distribuidora
+            description: "Sigla da distribuidora de energia"
+            tests:
+              - not_null
+          - name: dat_competencia
+            description: "Data de competência do registro"
+            tests:
+              - not_null
+          - name: vlr_mercado
+            description: "Valor do mercado"

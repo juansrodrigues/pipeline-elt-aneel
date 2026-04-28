@@ -1,0 +1,37 @@
+version: 2
+
+models:
+  - name: fct_receita_distribuidora
+    description: >
+      Tabela fato de receita por distribuidora e mês.
+      Contém a receita total em R$ de cada distribuidora agregada mensalmente,
+      com ranking de desempenho entre distribuidoras.
+    columns:
+      - name: mes_competencia
+        description: "Mês de referência do faturamento"
+        tests:
+          - not_null
+      - name: sigla_distribuidora
+        description: "Sigla única da distribuidora (ex: CEMAR, CELPA)"
+        tests:
+          - not_null
+      - name: receita_total_reais
+        description: "Receita total em R$ no mês para a distribuidora"
+        tests:
+          - not_null
+      - name: ranking_receita_mes
+        description: "Posição da distribuidora no ranking de receita do mês (1 = maior)"
+        tests:
+          - not_null
+
+  - name: stg_aneel__samp
+    description: "Staging do SAMP — dados limpos e tipificados da tabela RAW"
+    columns:
+      - name: dat_competencia
+        tests:
+          - not_null
+      - name: sigla_distribuidora
+        tests:
+          - not_null
+      - name: vlr_mercado
+        description: "Valor numérico do mercado após conversão de vírgula para ponto"
